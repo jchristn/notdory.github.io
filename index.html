@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NotDory — Your agents forget everything. NotDory doesn't.</title>
+  <meta name="description" content="NotDory is durable, self-hosted memory for AI agents. Agents remember decisions and conventions across sessions, pick up where they left off, use fewer tokens, and get to outcomes faster. Works with Claude Code, Codex, Cursor, Gemini CLI, and Mux over MCP.">
+  <meta name="keywords" content="agent memory, AI agents, MCP, Model Context Protocol, Claude Code, Codex, Cursor, Gemini CLI, Mux, long-term memory, RAG, context engineering, token savings, self-hosted">
+  <meta property="og:title" content="NotDory — Your agents forget everything. NotDory doesn't.">
+  <meta property="og:description" content="Durable memory for AI agents. Remember across sessions, pick up where you left off, use fewer tokens, get to outcomes faster.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://notdory.ai">
+  <meta property="og:image" content="https://notdory.ai/assets/logo.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="NotDory — Your agents forget everything. NotDory doesn't.">
+  <meta name="twitter:description" content="Durable, self-hosted memory for AI agents over MCP.">
+  <meta name="twitter:image" content="https://notdory.ai/assets/logo.png">
+  <link rel="canonical" href="https://notdory.ai/">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  <link rel="apple-touch-icon" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    // Apply theme before paint to avoid flash. Dark is the default.
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem('notdory-theme'); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', saved || 'dark');
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- Global background imagery -->
+  <div class="bg-layers" aria-hidden="true">
+    <div class="bg-glow"></div>
+    <div class="bg-grid"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" aria-label="NotDory home">
+        <img src="assets/logo.png" alt="" class="nav-logo-img" width="36" height="36">
+        <span class="wordmark"><span class="not">Not</span>Dory</span>
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="#why">Why</a>
+        <a href="#how">How It Works</a>
+        <a href="#features">Features</a>
+        <a href="#agents">Agents</a>
+        <a href="#quickstart">Quick Start</a>
+        <div class="nav-actions">
+          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+            <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <a href="https://github.com/jchristn/NotDory" target="_blank" rel="noopener" class="nav-github" aria-label="NotDory on GitHub" title="NotDory on GitHub">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          </a>
+        </div>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="bubbles" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="container">
+      <div class="hero-content">
+        <img src="assets/logo.png" alt="NotDory, a smiling blue fish with a circuit-board brain" class="hero-logo" width="200" height="200">
+        <div class="eyebrow"><span class="dot"></span> Open Source &middot; MIT Licensed &middot; Alpha</div>
+        <h1>Your agents forget everything.<br><span class="gradient-text">NotDory doesn't.</span></h1>
+        <p class="hero-sub">NotDory is durable, self-hosted memory for AI agents. Decisions, conventions, and hard-won lessons survive from one session to the next, so your agents pick up where they left off, spend fewer tokens rediscovering your world, and get to outcomes faster.</p>
+        <div class="hero-actions">
+          <a href="#quickstart" class="btn btn-primary">Get Started</a>
+          <a href="https://github.com/jchristn/NotDory" target="_blank" rel="noopener" class="btn btn-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            View on GitHub
+          </a>
+        </div>
+
+        <div class="hero-terminal">
+          <div class="terminal-bar">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">claude &mdash; my-repo (day 2)</span>
+          </div>
+          <pre class="terminal-body"><code><span class="t-prompt">$</span> claude
+<span class="t-comment"># SessionStart hook: NotDory loads this project's memory before the first turn</span>
+<span class="t-key">scope</span>      my-repo <span class="t-dim">(42 memories, 6 categories)</span>
+<span class="t-key">recent</span>     filesystem-layout <span class="t-dim">&middot;</span> build-and-test <span class="t-dim">&middot;</span> commit-rules <span class="t-dim">&middot;</span> auth-decision
+
+<span class="t-prompt">&gt;</span> pick up the auth refactor where we left off
+
+<span class="t-keyword">notdory</span> &middot; memory_search <span class="t-string">"auth refactor"</span>
+  <span class="t-type">auth-decision</span>   <span class="t-string">"Sessions move to bearer tokens; cookie path removed after v2"</span>
+  <span class="t-type">auth-progress</span>   <span class="t-string">"Routes migrated; middleware + tests remaining"</span>
+
+<span class="t-comment"># No re-scan of the repo. No re-asking. Straight back to work.</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Bar -->
+  <section class="trust-bar">
+    <div class="container">
+      <div class="trust-items">
+        <div class="trust-item">
+          <span class="trust-number">96<span>%</span></span>
+          <span class="trust-label">Tasks Solved With Memory</span>
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+          <span class="trust-number">17<span>%</span></span>
+          <span class="trust-label">Without It</span>
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+          <span class="trust-number">5</span>
+          <span class="trust-label">Agent Harnesses</span>
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+          <span class="trust-number">32</span>
+          <span class="trust-label">MCP Tools</span>
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+          <span class="trust-number">3</span>
+          <span class="trust-label">Storage Backends</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why -->
+  <section class="section" id="why">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Why NotDory</span>
+        <h2>Most AI agents are Dory.</h2>
+        <p class="section-sub">Dory, the lovable blue tang from <em>Finding Nemo</em>, forgets everything a few seconds after it happens. She's charming, she means well, and she'll introduce herself to you again tomorrow. Sound like any agents you know?</p>
+      </div>
+
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 3 3 9 9 9"/></svg>
+          </div>
+          <h3>Every session starts from zero</h3>
+          <p>A new session greets your codebase like it has never seen it before: re-reading the same files, re-learning the same conventions, re-asking the same questions.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 9a2.5 2.5 0 0 0-2.5-1.5c-1.4 0-2.5.8-2.5 2s1.1 1.7 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2A2.5 2.5 0 0 1 9.5 15"/><line x1="12" y1="6" x2="12" y2="7.5"/><line x1="12" y1="16.5" x2="12" y2="18"/></svg>
+          </div>
+          <h3>Tokens burned on rediscovery</h3>
+          <p>The dominant cost in agentic work is re-acquiring context. You pay for the same repository scan, the same file reads, and the same reasoning every single day.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <h3>The same mistakes, again</h3>
+          <p>You corrected it yesterday. You told it how you like commits written. It tried the approach that doesn't work. Today, it does all of that again.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3>Knowledge trapped in one tool</h3>
+          <p>What one agent learned stays locked inside one chat history. Switch harnesses, switch machines, or hand off to a teammate, and the context is gone.</p>
+        </div>
+      </div>
+
+      <div class="pivot">
+        <h3><span class="gradient-text">NotDory is not Dory.</span></h3>
+        <p>It gives your agents a memory that sticks, so they:</p>
+      </div>
+
+      <div class="benefits-grid">
+        <div class="benefit-item">
+          <div class="benefit-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>
+            <h4>Remember</h4>
+            <p>Decisions, conventions, facts, and "we tried that, it didn't work" survive across sessions, harnesses, and projects.</p>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>
+            <h4>Pick up where they left off</h4>
+            <p>Session start hands the agent its project's context, categories, and recent memories before the first turn.</p>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>
+            <h4>Use fewer tokens</h4>
+            <p>Recalling a note is far cheaper than re-scanning a repository to rediscover it. Write once, recall cheaply forever after.</p>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>
+            <h4>Get to outcomes faster</h4>
+            <p>Less rediscovery, more doing. The agent starts on the actual problem instead of rebuilding its understanding of your world.</p>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>
+            <h4>Stop repeating mistakes</h4>
+            <p>A correction or preference is saved once and honored from then on. Superseded decisions rank behind the ones that replaced them.</p>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>
+            <h4>Share what they learn</h4>
+            <p>What Claude Code learns, Codex, Cursor, Gemini CLI, and Mux can recall. One memory, every harness, every teammate.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare">
+        <h4>Measured, not promised</h4>
+        <p>Claude Code ran 24 tasks whose answers lived only in project memory, with every built-in tool disabled.</p>
+        <div class="compare-row">
+          <span class="compare-label">With NotDory</span>
+          <div class="compare-track"><div class="compare-fill with" style="--w: 96%"></div></div>
+          <span class="compare-value">96%</span>
+        </div>
+        <div class="compare-row">
+          <span class="compare-label">No memory</span>
+          <div class="compare-track"><div class="compare-fill without" style="--w: 17%"></div></div>
+          <span class="compare-value">17%</span>
+        </div>
+        <p class="compare-note">Task completion, 23 of 24 versus 4 of 24. Methodology and every other number are in the <a href="https://github.com/jchristn/NotDory/blob/main/benchmarks/RESULTS.md" target="_blank" rel="noopener">benchmark results</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section section-alt" id="how">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">How It Works</span>
+        <h2>Memory the agent manages itself.</h2>
+        <p class="section-sub">Agents read and write structured memory over MCP. The model decides what to remember and recalls it on demand, while you manage everything through a REST API and a web dashboard.</p>
+      </div>
+
+      <div class="arch-diagram">
+        <div class="arch-row">
+          <div class="arch-box">
+            <div class="arch-box-label">Your agents</div>
+            <div class="arch-box-sub">Claude Code &middot; Codex &middot; Cursor &middot; Gemini CLI &middot; Mux</div>
+          </div>
+          <div class="arch-box">
+            <div class="arch-box-label">You</div>
+            <div class="arch-box-sub">Dashboard &middot; REST API &middot; OpenAPI</div>
+          </div>
+        </div>
+        <div class="arch-arrow">
+          <svg width="20" height="30" viewBox="0 0 20 30" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="10" y1="0" x2="10" y2="26"/><polyline points="4 20 10 26 16 20"/></svg>
+          <small>MCP &amp; REST</small>
+        </div>
+        <div class="arch-row">
+          <div class="arch-box core">
+            <div class="arch-box-label"><img src="assets/logo.png" alt="" width="30" height="30"> NotDory</div>
+            <div class="arch-box-sub">Scopes, categories, memories, and policies &middot; hybrid search &middot; reranking &middot; tenants &amp; RBAC</div>
+          </div>
+        </div>
+        <div class="arch-arrow">
+          <svg width="20" height="30" viewBox="0 0 20 30" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="10" y1="0" x2="10" y2="26"/><polyline points="4 20 10 26 16 20"/></svg>
+          <small>per-scope storage</small>
+        </div>
+        <div class="arch-row">
+          <div class="arch-box">
+            <div class="arch-box-label">RecallDB</div>
+            <div class="arch-box-sub">Semantic + keyword hybrid search</div>
+          </div>
+          <div class="arch-box">
+            <div class="arch-box-label">Verbex</div>
+            <div class="arch-box-sub">Lexical search, no embeddings</div>
+          </div>
+          <div class="arch-box">
+            <div class="arch-box-label">Filesystem</div>
+            <div class="arch-box-sub">Git-trackable markdown</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-details">
+        <div class="arch-detail">
+          <h4>Scopes</h4>
+          <p>A project, a book, or "global". Session start matches the project by its git remote or folder name, and creates the scope on first use.</p>
+        </div>
+        <div class="arch-detail">
+          <h4>Categories</h4>
+          <p>Buckets with usage instructions the model reads before writing, so it knows <em>how</em> to use a memory space, not just that it exists.</p>
+        </div>
+        <div class="arch-detail">
+          <h4>Memories</h4>
+          <p>Atomic notes with tags, links, provenance, and salience. A new memory can supersede an old one, and near-duplicates are flagged on write.</p>
+        </div>
+        <div class="arch-detail">
+          <h4>Policies</h4>
+          <p>Cross-cutting rules, like a house writing style or your commit conventions, that apply everywhere and are surfaced to the agent proactively.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Features</span>
+        <h2>The right context, proactively.</h2>
+        <p class="section-sub">Structured memory, not a blob of nearest-neighbor chunks.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <h3>One-step session start</h3>
+          <p>One <code>session_start</code> call returns the project's scope, protocol, categories, instructions, and recent memories. The Claude Code hook does it before the first turn.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+          <h3>Hybrid search + reranking</h3>
+          <p>Semantic and keyword retrieval fused into one ranking, with an optional cross-encoder reranker. nDCG@10 of 0.81&ndash;0.91 on memory datasets, up to 0.97 reranked.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
+          <h3>Pluggable storage per scope</h3>
+          <p>RecallDB for semantic search, Verbex for lexical search, or plain files that travel inside the repo and get reviewed in pull requests. Choose per scope.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
+          <h3>Editable agent onboarding</h3>
+          <p>The server instructions and every tool description are editable in the dashboard. Changes reach connected agents without a restart.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <h3>Multi-tenant with RBAC</h3>
+          <p>Tenants, users, and credentials with fine-grained permissions. Agents connect with a least-privilege access key; the secret key never leaves your machine.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <h3>Observable out of the box</h3>
+          <p>Metrics, traces, and logs wired into Prometheus, Tempo, Loki, and pre-built Grafana dashboards. Every request is recorded in request history.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Agents -->
+  <section class="section section-alt" id="agents">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Agents</span>
+        <h2>Bring your own harness.</h2>
+        <p class="section-sub">NotDory speaks MCP, so any MCP-capable agent can use it. Ready-made installers for macOS, Linux, and Windows write the config for you, back up the existing file, and leave everything else intact.</p>
+      </div>
+
+      <div class="sdk-tabs" role="tablist">
+        <button class="sdk-tab active" data-tab="claude" role="tab" aria-selected="true">Claude Code</button>
+        <button class="sdk-tab" data-tab="codex" role="tab" aria-selected="false">Codex</button>
+        <button class="sdk-tab" data-tab="cursor" role="tab" aria-selected="false">Cursor</button>
+        <button class="sdk-tab" data-tab="gemini" role="tab" aria-selected="false">Gemini CLI</button>
+        <button class="sdk-tab" data-tab="mux" role="tab" aria-selected="false">Mux</button>
+      </div>
+      <div class="sdk-panels">
+        <div class="sdk-panel active" id="panel-claude" role="tabpanel">
+          <pre class="terminal-body"><code><span class="t-comment"># Registers NotDory at user scope and installs the SessionStart hook</span>
+<span class="t-prompt">$</span> sh scripts/macos/install-claude.sh <span class="t-string">&lt;accessKey&gt;</span>
+
+<span class="t-comment"># Or wire it up by hand</span>
+<span class="t-prompt">$</span> claude mcp add --transport http notdory http://127.0.0.1:8720/mcp \
+    --header <span class="t-string">"x-access-key: &lt;accessKey&gt;"</span>
+
+<span class="t-comment"># Tools appear as mcp__notdory__session_start, mcp__notdory__memory_search, ...</span></code></pre>
+        </div>
+        <div class="sdk-panel" id="panel-codex" role="tabpanel">
+          <pre class="terminal-body"><code><span class="t-prompt">$</span> sh scripts/macos/install-codex.sh <span class="t-string">&lt;accessKey&gt;</span>
+
+<span class="t-comment"># Writes ~/.codex/config.json</span>
+{
+  <span class="t-key">"mcpServers"</span>: {
+    <span class="t-key">"notdory"</span>: {
+      <span class="t-key">"type"</span>: <span class="t-string">"http"</span>,
+      <span class="t-key">"url"</span>: <span class="t-string">"http://127.0.0.1:8720/mcp"</span>,
+      <span class="t-key">"headers"</span>: { <span class="t-key">"x-access-key"</span>: <span class="t-string">"&lt;accessKey&gt;"</span> }
+    }
+  }
+}</code></pre>
+        </div>
+        <div class="sdk-panel" id="panel-cursor" role="tabpanel">
+          <pre class="terminal-body"><code><span class="t-prompt">$</span> sh scripts/macos/install-cursor.sh <span class="t-string">&lt;accessKey&gt;</span>
+
+<span class="t-comment"># Writes ~/.cursor/mcp.json (or .cursor/mcp.json per project)</span>
+{
+  <span class="t-key">"mcpServers"</span>: {
+    <span class="t-key">"notdory"</span>: {
+      <span class="t-key">"url"</span>: <span class="t-string">"http://127.0.0.1:8720/mcp"</span>,
+      <span class="t-key">"headers"</span>: { <span class="t-key">"x-access-key"</span>: <span class="t-string">"&lt;accessKey&gt;"</span> }
+    }
+  }
+}</code></pre>
+        </div>
+        <div class="sdk-panel" id="panel-gemini" role="tabpanel">
+          <pre class="terminal-body"><code><span class="t-prompt">$</span> sh scripts/macos/install-gemini.sh <span class="t-string">&lt;accessKey&gt;</span>
+
+<span class="t-comment"># Writes ~/.gemini/settings.json (or .gemini/settings.json per project)</span>
+{
+  <span class="t-key">"mcpServers"</span>: {
+    <span class="t-key">"notdory"</span>: {
+      <span class="t-key">"httpUrl"</span>: <span class="t-string">"http://127.0.0.1:8720/mcp"</span>,
+      <span class="t-key">"headers"</span>: { <span class="t-key">"x-access-key"</span>: <span class="t-string">"&lt;accessKey&gt;"</span> }
+    }
+  }
+}</code></pre>
+        </div>
+        <div class="sdk-panel" id="panel-mux" role="tabpanel">
+          <pre class="terminal-body"><code><span class="t-prompt">$</span> sh scripts/macos/install-mux.sh <span class="t-string">&lt;accessKey&gt;</span>
+
+<span class="t-comment"># Appends to ~/.mux/mcp-servers.json</span>
+{
+  <span class="t-key">"servers"</span>: [
+    {
+      <span class="t-key">"name"</span>: <span class="t-string">"notdory"</span>,
+      <span class="t-key">"transport"</span>: <span class="t-string">"http"</span>,
+      <span class="t-key">"url"</span>: <span class="t-string">"http://127.0.0.1:8720"</span>,
+      <span class="t-key">"mcpPath"</span>: <span class="t-string">"/mcp"</span>,
+      <span class="t-key">"auth"</span>: { <span class="t-key">"type"</span>: <span class="t-string">"bearer"</span>, <span class="t-key">"bearerToken"</span>: <span class="t-string">"&lt;accessKey&gt;"</span> }
+    }
+  ]
+}</code></pre>
+        </div>
+      </div>
+      <p class="harness-note">On Linux use <code>scripts/linux/</code>; on Windows, <code>scripts\windows\install-*.bat</code>. Matching <code>remove-*</code> scripts undo the change. Restart the client afterwards.</p>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section class="section" id="use-cases">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Use Cases</span>
+        <h2>Domain-agnostic by design.</h2>
+        <p class="section-sub">Anywhere an agent should know tomorrow what it learned today.</p>
+      </div>
+      <div class="usecases-grid">
+        <div class="usecase-card">
+          <div class="usecase-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+          <h3>Coding agents</h3>
+          <p>Repository layout, conventions, what a function does, and why a decision was made, so a fresh session doesn't re-scan the tree.</p>
+        </div>
+        <div class="usecase-card">
+          <div class="usecase-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+          <h3>Writing</h3>
+          <p>A house style, character and world facts, and continuity across a long document or a whole series.</p>
+        </div>
+        <div class="usecase-card">
+          <div class="usecase-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <h3>Email &amp; calendar</h3>
+          <p>Preferences, recurring participants, and standing instructions your assistant should never need to be told twice.</p>
+        </div>
+        <div class="usecase-card">
+          <div class="usecase-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="6" r="2"/><circle cx="20" cy="6" r="2"/><circle cx="4" cy="18" r="2"/><circle cx="20" cy="18" r="2"/><line x1="6" y1="7" x2="10" y2="10.5"/><line x1="18" y1="7" x2="14" y2="10.5"/><line x1="6" y1="17" x2="10" y2="13.5"/><line x1="18" y1="17" x2="14" y2="13.5"/></svg></div>
+          <h3>Team knowledge</h3>
+          <p>A shared tenant so multiple agents, and the people working alongside them, draw on the same memory.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Start -->
+  <section class="section section-alt" id="quickstart">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Quick Start</span>
+        <h2>Up and remembering in minutes.</h2>
+        <p class="section-sub">Self-hosted with Docker Compose. One clone, one command.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-number-col">
+            <div class="step-number">1</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <h3>Clone &amp; launch</h3>
+            <div class="step-code" data-copy>
+              <pre><code><span class="t-prompt">$</span> git clone https://github.com/jchristn/NotDory.git
+<span class="t-prompt">$</span> cd NotDory/docker
+<span class="t-prompt">$</span> cp .env.example .env
+<span class="t-prompt">$</span> docker compose up -d --build</code></pre>
+            </div>
+            <p>The API server, MCP server, dashboard, RecallDB, Postgres with pgvector, and the Prometheus, Tempo, Loki, and Grafana stack all come up together. Add <code>--profile rerank</code> (or <code>rerank-gpu</code>) for a cross-encoder reranker.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number-col">
+            <div class="step-number">2</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <h3>Connect your agent</h3>
+            <div class="step-code" data-copy>
+              <pre><code><span class="t-prompt">$</span> sh scripts/macos/install-claude.sh</code></pre>
+            </div>
+            <p>Pick the installer for your harness and OS (see <a href="#agents" style="color: var(--accent)">Agents</a>). With no access key it uses the local-dev default, <code>notdorydefaultkey</code>. Restart the client.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number-col">
+            <div class="step-number">3</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <h3>Just keep working</h3>
+            <p>Your agent calls <code>session_start</code>, searches memory before answering or changing code, and saves decisions, facts, preferences, and corrections as it goes. Tomorrow, it remembers.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="quickstart-creds">
+        <h4>Local endpoints &amp; default credentials</h4>
+        <div class="creds-grid">
+          <div class="cred-item">
+            <span class="cred-label">Dashboard</span>
+            <code>127.0.0.1:8701</code>
+          </div>
+          <div class="cred-item">
+            <span class="cred-label">MCP</span>
+            <code>127.0.0.1:8720/mcp</code>
+          </div>
+          <div class="cred-item">
+            <span class="cred-label">Admin login</span>
+            <code>admin@notdory.local</code>
+          </div>
+          <div class="cred-item">
+            <span class="cred-label">Password</span>
+            <code>notdoryadmin</code>
+          </div>
+        </div>
+        <p class="creds-warning">Change the defaults before any shared deployment. NotDory is alpha: APIs and schemas will change between 0.1.x builds.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section section-cta">
+    <div class="container">
+      <div class="cta-shell">
+        <div class="cta-content">
+          <img src="assets/logo.png" alt="" class="cta-logo" width="96" height="96">
+          <h2>Just keep swimming. <span class="gradient-text">And keep remembering.</span></h2>
+          <p>Give your agents a memory that outlasts the session. Open source, MIT licensed, and self-hosted.</p>
+          <div class="cta-actions">
+            <a href="https://github.com/jchristn/NotDory" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              Get Started on GitHub
+            </a>
+            <a href="https://github.com/jchristn/NotDory/blob/main/docs/CONNECTING_AGENTS.md" target="_blank" rel="noopener" class="btn btn-secondary btn-lg">Read the Docs</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="#" class="nav-logo" aria-label="NotDory home">
+            <img src="assets/logo.png" alt="" class="nav-logo-img" width="36" height="36">
+            <span class="wordmark"><span class="not">Not</span>Dory</span>
+          </a>
+          <p>Your agents forget everything. NotDory doesn't.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Product</h4>
+            <a href="#why">Why NotDory</a>
+            <a href="#how">How It Works</a>
+            <a href="#features">Features</a>
+            <a href="#agents">Agents</a>
+            <a href="#quickstart">Quick Start</a>
+          </div>
+          <div class="footer-col">
+            <h4>Resources</h4>
+            <a href="https://github.com/jchristn/NotDory/blob/main/docs/CONNECTING_AGENTS.md" target="_blank" rel="noopener">Connecting Agents</a>
+            <a href="https://github.com/jchristn/NotDory/blob/main/docs/MCP_API.md" target="_blank" rel="noopener">MCP Reference</a>
+            <a href="https://github.com/jchristn/NotDory/blob/main/docs/REST_API.md" target="_blank" rel="noopener">REST Reference</a>
+            <a href="https://github.com/jchristn/NotDory/blob/main/benchmarks/RESULTS.md" target="_blank" rel="noopener">Benchmarks</a>
+            <a href="https://github.com/jchristn/NotDory/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/jchristn/NotDory/blob/main/LICENSE.md" target="_blank" rel="noopener">MIT License</a>
+          </div>
+          <div class="footer-col">
+            <h4>Related</h4>
+            <a href="https://recalldb.ai" target="_blank" rel="noopener">RecallDB</a>
+            <a href="https://usemux.ai" target="_blank" rel="noopener">Mux</a>
+            <a href="https://litegraphdb.com" target="_blank" rel="noopener">LiteGraph</a>
+            <a href="https://partio.ai" target="_blank" rel="noopener">Partio</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>MIT Licensed. Self-hosted memory for AI agents.</span>
+        <a href="https://github.com/jchristn/NotDory" target="_blank" rel="noopener" aria-label="NotDory on GitHub" title="NotDory on GitHub">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+      </div>
+      <p class="footer-disclaimer">NotDory is not affiliated with, endorsed by, or sponsored by Disney or Pixar. <em>Finding Nemo</em> and Dory are trademarks of their respective owners.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
